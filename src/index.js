@@ -1,6 +1,7 @@
 import "dotenv/config";
 import cors from "cors";
 import express from "express";
+import routes from "./routes";
 
 const app = express();
 
@@ -9,8 +10,26 @@ const app = express();
 // (i.e., whitelisting domains): https://github.com/expressjs/cors
 app.use(cors());
 
-app.get("/", (req, res) => {
-	res.send("hello world");
+// Allows receiving of a JSON or URL Encoded payload
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// App level function used to intercept any requests and do something before
+// sending a response back (i.e., defining context or authentication).
+app.use((req, res, next) => {
+	// The next function is called to signalize that the middleware has finished
+	// its job. Important for when middleware uses asynchronous functions.
+
+	// TODO: Define context.models.resources
+	next();
 });
 
-app.listen(3000, () => console.log("listening on port 3000"));
+app.use("/resources", routes.resource);
+
+app.get("/", (req, res) => {
+	return res.send("Recieved a GET HTTP method");
+});
+
+app.listen(process.env.PORT, () => {
+	console.log(`Listening on port ${process.env.PORT}`);
+});
