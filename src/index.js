@@ -37,7 +37,35 @@ app.get("/", (req, res) => {
 // Re-initialize your database on every Express server start
 const eraseDatabaseOnSync = true;
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
+	if (eraseDatabaseOnSync) {
+		seedDatabaseWithResources();
+	}
+
 	app.listen(process.env.PORT, () => {
 		console.log(`Listening on port ${process.env.PORT}`);
 	});
 });
+
+const seedDatabaseWithResources = async () => {
+	await models.Resource.create({
+		title: "resource-title",
+		description: "resource-description",
+		url: "www.some-resource-url.com",
+		referrer: "resource-referrer",
+		credit: "resource-person",
+		published: Date.now(),
+		created: Date.now(),
+		type: "resource-type"
+	});
+
+	await models.Resource.create({
+		title: "another-resource-title",
+		description: "another-resource-description",
+		url: "www.some-resource-url.com",
+		referrer: "resource-referrer",
+		credit: "resource-person",
+		published: Date.now(),
+		created: Date.now(),
+		type: "resource-type"
+	});
+};

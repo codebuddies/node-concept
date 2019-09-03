@@ -1,30 +1,37 @@
-import { uuidv4 as uuid } from "uuid/v4";
 import { Router } from "express";
 
 const router = Router();
 
-router.get("/", (req, res) => {
-	return res.send(Object.values(req.context.models.resources));
+router.get("/", async (req, res) => {
+	const resources = await req.context.models.Resource.findAll();
+	return res.send(resources);
 });
 
-router.get("/:resourceId", (req, res) => {
-	return res.send(req.context.models.resources[req.params.resourceId]);
+router.get("/:resourceId", async (req, res) => {
+	const resource = await req.context.models.Resource.findByPk(
+		req.params.resourceId
+	);
+	return res.send(resource);
 });
 
-router.post("/", (req, res) => {
-	const id = uuid();
-	const resource = {
-		id,
+router.post("/", async (req, res) => {
+	const resource = await req.context.models.Resource.create({
 		title: req.body.title,
 		description: req.body.description,
 		url: req.body.url,
 		published: Date.now(),
 		created: Date.now()
-	};
-
-	// TODO: Sequelize
+	});
 
 	return res.send(resource);
+});
+
+router.delete("/:resourceId", async (req, res) => {
+	const result = await req.context.models.Resource.destroy({
+		where: { id: req.params.resourceId }
+	});
+
+	return res.send(true);
 });
 
 export default router;
