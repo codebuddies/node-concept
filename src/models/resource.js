@@ -25,6 +25,10 @@ const resource = (sequelize, DataTypes) => {
 		type: DataTypes.STRING
 	});
 
+	// TODO: define resource associate to belong to user
+	// Resource.associate = models => {
+	//   Resource.belongsTo(models.User)
+	// }
 	return Resource;
 };
 

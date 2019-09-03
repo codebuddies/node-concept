@@ -1,3 +1,3 @@
 import resource from "./resource";
 
-export { resource };
+export default { resource };
